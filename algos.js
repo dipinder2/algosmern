@@ -1,41 +1,63 @@
-
-const test1NumsA = [1, 2];
-const test1NumsB = [2, 1];
-const expected1 = [];
-// Explanation: 1 and 2 are in both arrays so are excluded
-
-const test2NumsA = [1, 2, 3];
-const test2NumsB = [4, 5, 6];
-const expected2 = [1, 2, 3, 4, 5, 6];
-// Explanation: neither array has shared values, so all are included
-
-const test3NumsA = [4, 1, 2, 3, 4];
-const test3NumsB = [1, 2, 3, 5, 5, 2];
-const expected3 = [4, 5];
-
-function symmetricDifferences(numsA, numsB) {
-  var unique = {}
-  var idxA = 0;
-  var idxB = 0;
-
-  while (idxA < numsA.length && idxB<numsB.length) {
-      if(!unique[numsA[idxA]]){
-        unique[numsA[idxA]] ="a";
+/**
+ * Finds all the sets of consecutive numbers that sum to the given target sum.
+ * - Time: O(?).
+ * - Space: O(?).
+ * @param {Array<number>} nums Unordered nums.
+ * @param {number} targetSum
+ * @returns {Array<Array<number>>} 2d array where each nested array is a set of
+ *    consecutive numbers that add up to the given targetSum. Consecutive in
+ *    this context means the numbers whose indexes are one after the other
+ *    only.
+ */
+function findConsqSums(nums, targetSum) {
+  let results = [];
+  let sum = nums[0];
+  let left = 0;
+  let right = 1
+  while (right < nums.length) {
+    if (Math.abs(sum) == Math.abs(targetSum)) {
+      let temp = []
+      for(let i= left;i<right;i++){
+        temp.push(nums[i])
       }
-     if(!unique[numsB[idxB]]){
-        unique[numsB[idxB]] = "b";
-      }
-      if(unique[numsA[idxA]]=="b"){
-        delete unique[numsA[idxA]]
-      }
-      if(unique[numsB[idxB]]=="a"){
-        delete unique[numsB[idxB]]
-      }
-      idxA++
-      idxB++
 
+      results.push(temp)
+    }
+    if (Math.abs(sum) <= Math.abs(targetSum)) {
+      sum += nums[right];
+      right++;
+    }
+    else if (Math.abs(sum) >= Math.abs(targetSum)) {
+      sum -= nums[left];
+      left++;
+    }
   }
-  return unique;
+  return results;
 }
 
-console.log(symmetricDifferences(test2NumsA, test2NumsB))
+const nums2 = [2, 5, 3, 6, 7, 0, 0, 23, 12];
+const sum2 = 16;
+const expected2 = [
+  [2, 5, 3, 6],
+  [3, 6, 7],
+  [3, 6, 7, 0],
+  [3, 6, 7, 0, 0],
+];
+
+
+// Bonus:
+const nums3 = [-2, -5, -3, -6, -7, -0, -0, -23, -12];
+const sum3 = -16;
+const expected3 = [
+  [-2, -5, -3, -6],
+  [-3, -6, -7],
+  [-3, -6, -7, -0],
+  [-3, -6, -7, -0, -0],
+];
+const nums1 = [2, 5, 3, 6, 7, 23, 12];
+const sum1 = 16;
+const expected1 = [
+  [2, 5, 3, 6],
+  [3, 6, 7],
+];
+console.log(findConsqSums(nums2, sum2));
